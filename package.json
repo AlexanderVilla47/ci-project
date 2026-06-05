@@ -4,9 +4,10 @@
 	"description": "Repositorio para la asignatura Ingeniería y Calidad de Software. 2da instancia de Evaluación",
 	"main": "index.js",
 	"scripts": {
-		"start": "node src/index.js",
-		"test": "vitest run",
-		"test:watch": "vitest"
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
 	},
 	"repository": {
 		"type": "git",
