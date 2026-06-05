@@ -17,6 +17,15 @@
 	"author": "",
 	"license": "ISC",
 	"type": "commonjs",
+	"vitest": {
+		"coverage": {
+			"reporter": [
+				"lcov",
+				"text"
+			],
+			"reportsDirectory": "./coverage"
+		}
+	},
 	"bugs": {
 		"url": "https://github.com/AlexanderVilla47/ci-project/issues"
 	},
