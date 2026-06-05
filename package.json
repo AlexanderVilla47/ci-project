@@ -22,6 +22,7 @@
 	"homepage": "https://github.com/AlexanderVilla47/ci-project#readme",
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
+		"@vitest/coverage-v8": "^4.1.8",
 		"supertest": "^7.0.0",
 		"vitest": "^4.1.8"
 	},
