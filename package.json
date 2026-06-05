@@ -1,0 +1,24 @@
+{
+  "name": "ci-project",
+  "version": "1.0.0",
+  "description": "Repositorio para la asignatura Ingeniería y Calidad de Software. 2da instancia de Evaluación",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderVilla47/ci-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AlexanderVilla47/ci-project/issues"
+  },
+  "homepage": "https://github.com/AlexanderVilla47/ci-project#readme",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16"
+  }
+}
