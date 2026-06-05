@@ -4,7 +4,9 @@
   "description": "Repositorio para la asignatura Ingeniería y Calidad de Software. 2da instancia de Evaluación",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,11 @@
   },
   "homepage": "https://github.com/AlexanderVilla47/ci-project#readme",
   "devDependencies": {
-    "@biomejs/biome": "^2.4.16"
+    "@biomejs/biome": "^2.4.16",
+    "supertest": "^7.0.0",
+    "vitest": "^4.1.8"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }

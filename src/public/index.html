@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Estadísticas</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        background: #f5f5f5;
+        color: #222;
+      }
+      h1 { margin-bottom: 0.25rem; }
+      p.hint { color: #666; margin-top: 0; }
+      form { display: flex; flex-direction: column; gap: 0.75rem; }
+      input, button {
+        font-size: 1rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button:hover { background: #1d4ed8; }
+      .results, .error {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 6px;
+        background: white;
+        border: 1px solid #e5e5e5;
+      }
+      .error { background: #fee; border-color: #fcc; color: #900; }
+      .results dl { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; margin: 0; }
+      .results dt { font-weight: 600; color: #555; }
+      .results dd { margin: 0; font-variant-numeric: tabular-nums; }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <h1>Calculadora de Estadísticas</h1>
+    <p class="hint">Ingresá números separados por coma (ej: <code>1, 2, 3, 4, 5</code>)</p>
+
+    <form id="stats-form">
+      <input
+        id="numbers-input"
+        type="text"
+        placeholder="1, 2, 3, 4, 5"
+        autocomplete="off"
+        required
+      />
+      <button type="submit">Calcular</button>
+    </form>
+
+    <div id="results" class="results hidden">
+      <dl>
+        <dt>Promedio</dt><dd id="r-mean"></dd>
+        <dt>Mediana</dt><dd id="r-median"></dd>
+        <dt>Máximo</dt><dd id="r-max"></dd>
+        <dt>Mínimo</dt><dd id="r-min"></dd>
+      </dl>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+    <script>
+      const form = document.getElementById('stats-form');
+      const input = document.getElementById('numbers-input');
+      const results = document.getElementById('results');
+      const errorBox = document.getElementById('error');
+
+      const showError = (msg) => {
+        results.classList.add('hidden');
+        errorBox.textContent = msg;
+        errorBox.classList.remove('hidden');
+      };
+
+      const showResults = (data) => {
+        errorBox.classList.add('hidden');
+        document.getElementById('r-mean').textContent = data.mean;
+        document.getElementById('r-median').textContent = data.median;
+        document.getElementById('r-max').textContent = data.max;
+        document.getElementById('r-min').textContent = data.min;
+        results.classList.remove('hidden');
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const numbers = input.value
+          .split(',')
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0)
+          .map(Number);
+
+        if (numbers.length === 0 || numbers.some(Number.isNaN)) {
+          showError('Entrada inválida. Usá solo números separados por coma.');
+          return;
+        }
+
+        try {
+          const res = await fetch('/stats', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ numbers }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            showError(data.error || 'Error desconocido');
+            return;
+          }
+
+          showResults(data);
+        } catch (err) {
+          showError('No se pudo conectar con el servidor: ' + err.message);
+        }
+      });
+    </script>
+  </body>
+</html>
