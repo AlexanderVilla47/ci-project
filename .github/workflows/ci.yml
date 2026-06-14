@@ -68,20 +68,35 @@ jobs:
             alexandervilla/ci-project:${{ github.sha }}
 
   deploy:
-      name: 🚀 Deploy en Oracle
-      runs-on: ubuntu-latest
-      needs: docker
-      if: github.ref == 'refs/heads/main'
+    name: 🚀 Deploy en Oracle
+    runs-on: ubuntu-latest
+    needs: docker
+    if: github.ref == 'refs/heads/main'
 
-      steps:
-        - name: Deploy en servidor Oracle
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: 168.138.125.21
-            username: ubuntu
-            key: ${{ secrets.ORACLE_SSH_KEY }}
-            script: |
-              docker pull alexandervilla/ci-project:latest
-              docker stop ci-project || true
-              docker rm ci-project || true
-              docker run -d -p 3000:3000 --name ci-project --restart unless-stopped alexandervilla/ci-project:latest
+    steps:
+      - name: Deploy en servidor Oracle
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 168.138.125.21
+          username: ubuntu
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          script: |
+            docker pull alexandervilla/ci-project:latest
+            docker stop ci-project || true
+            docker rm ci-project || true
+            docker run -d -p 3000:3000 --name ci-project --restart unless-stopped alexandervilla/ci-project:latest
+
+  notify:
+    name: 📣 Notificación Slack
+    runs-on: ubuntu-latest
+    needs: [ci, docker, deploy]
+    if: always() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Notificar resultado
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
