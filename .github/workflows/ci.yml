@@ -2,7 +2,8 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '**'
   pull_request:
     branches: [main]
 
@@ -89,14 +90,14 @@ jobs:
   notify:
     name: 📣 Notificación Slack
     runs-on: ubuntu-latest
-    needs: [ci, docker, deploy]
-    if: always() && github.ref == 'refs/heads/main'
+    needs: [ci]
+    if: always()
 
     steps:
       - name: Notificar resultado
         uses: 8398a7/action-slack@v3
         with:
-          status: ${{ job.status }}
+          status: ${{ needs.ci.result }}
           fields: repo,message,commit,author,job,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
