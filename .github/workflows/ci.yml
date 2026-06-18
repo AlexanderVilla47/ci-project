@@ -39,6 +39,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Verificar Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   docker:
     name: 🐳 Build y Push Docker
     runs-on: ubuntu-latest
@@ -87,17 +93,38 @@ jobs:
             docker rm ci-project || true
             docker run -d -p 3000:3000 --name ci-project --restart unless-stopped alexandervilla/ci-project:latest
 
-  notify:
-    name: 📣 Notificación Slack
+  notify-ci:
+    name: 📣 Notificación CI
     runs-on: ubuntu-latest
     needs: [ci]
-    if: always()
+    if: always() && github.ref != 'refs/heads/main'
 
     steps:
-      - name: Notificar resultado
+      - name: Notificar resultado CI
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ needs.ci.result }}
-          fields: repo,message,commit,author,job,took
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify-full:
+    name: 📣 Notificación Completa
+    runs-on: ubuntu-latest
+    needs: [ci, docker, deploy]
+    if: always() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Notificar resultado completo
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ contains(needs.*.result, 'failure') && 'danger' || 'good' }}',
+                text: `${{ contains(needs.*.result, 'failure') && '❌ Pipeline falló' || '✅ Pipeline OK' }}\n*Repo:* ${{ github.repository }}\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*CI:* ${{ needs.ci.result }}\n*Docker:* ${{ needs.docker.result }}\n*Deploy:* ${{ needs.deploy.result }}`
+              }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
