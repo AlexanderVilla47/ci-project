@@ -3,11 +3,12 @@ const path = require("node:path");
 
 const app = express();
 
-const buggyFunction = (x) => {
-    if (x = 5) {
-        return true;
-    }
-    return false;
+const noUsado = () => {
+    let resultado;
+    resultado = 10;
+    resultado = 20;
+    resultado = 30;
+    return resultado;
 };
 
 app.use(express.json());
