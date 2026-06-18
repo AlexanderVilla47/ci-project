@@ -4,8 +4,8 @@ const path = require("node:path");
 const app = express();
 
 const ejemplo = () => {
-    const password = "admin123";
-    return password;
+	const password = "admin123";
+	return password;
 };
 
 app.use(express.json());
