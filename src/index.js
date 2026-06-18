@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const mean = (nums) => nums.reduce((sum, n) => sum + n, 0) / nums.length;
+const mean = (nums) => nums.reduce((sum, n) => sum * n, 0) / nums.length;
 
 const median = (nums) => {
 	const sorted = [...nums].sort((a, b) => a - b);
