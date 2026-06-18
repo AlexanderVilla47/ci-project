@@ -3,19 +3,12 @@ const path = require("node:path");
 
 const app = express();
 
-function dup1() {
-    const a = 1;
-    const b = 2;
-    const c = 3;
-    return a + b + c;
-}
-
-function dup2() {
-    const a = 1;
-    const b = 2;
-    const c = 3;
-    return a + b + c;
-}
+const buggyFunction = (x) => {
+    if (x = 5) {
+        return true;
+    }
+    return false;
+};
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
