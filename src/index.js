@@ -3,12 +3,9 @@ const path = require("node:path");
 
 const app = express();
 
-const noUsado = () => {
-	let resultado;
-	resultado = 10;
-	resultado = 20;
-	resultado = 30;
-	return resultado;
+const ejemplo = () => {
+    const password = "admin123";
+    return password;
 };
 
 app.use(express.json());
