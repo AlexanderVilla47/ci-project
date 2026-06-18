@@ -4,11 +4,11 @@ const path = require("node:path");
 const app = express();
 
 const noUsado = () => {
-    let resultado;
-    resultado = 10;
-    resultado = 20;
-    resultado = 30;
-    return resultado;
+	let resultado;
+	resultado = 10;
+	resultado = 20;
+	resultado = 30;
+	return resultado;
 };
 
 app.use(express.json());
