@@ -3,7 +3,13 @@ const path = require("node:path");
 
 const app = express();
 
-const errorbiome = 42;
+const noUsado = () => {
+    let resultado;
+    resultado = 10;
+    resultado = 20;
+    resultado = 30;
+    return resultado;
+};
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
