@@ -104,8 +104,14 @@ jobs:
       - name: Notificar resultado CI
         uses: 8398a7/action-slack@v3
         with:
-          status: ${{ needs.ci.result }}
-          fields: repo,message,commit,author
+          status: custom
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ needs.ci.result == 'failure' && 'danger' || 'good' }}',
+                text: `${{ needs.ci.result == 'failure' && '❌ Pipeline falló' || '✅ Pipeline OK' }}\n*Repo:* ${{ github.repository }}\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\n*CI:* ${{ needs.ci.result }}`
+              }]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
