@@ -6,6 +6,19 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+const calcularAlgo = (a, b, c) => {
+	if (a > b) {
+		if (b > c) {
+			return a + b + c;
+		}
+		return a + c;
+	}
+	if (b > c) {
+		return b + c;
+	}
+	return 0;
+};
+
 const mean = (nums) => nums.reduce((sum, n) => sum + n, 0) / nums.length;
 
 const median = (nums) => {
